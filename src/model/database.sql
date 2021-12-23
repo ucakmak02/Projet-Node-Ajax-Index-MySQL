@@ -1,0 +1,20 @@
+CREATE TABLE `prestations` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `prestation` varchar(255) DEFAULT NULL,
+  `chantier` varchar(255) DEFAULT NULL,
+  `janv` float DEFAULT 0,
+  `fev` float DEFAULT 0,
+  `mars` float DEFAULT 0,
+  `avril` float DEFAULT 0,
+  `mai` float DEFAULT 0,
+  `juin` float DEFAULT 0,
+  `juil` float DEFAULT 0,
+  `aout` float DEFAULT 0,
+  `sept` float DEFAULT 0,
+  `oct` float DEFAULT 0,
+  `nov` float DEFAULT 0,
+  `dec` float DEFAULT 0,
+  INDEX (`id`),
+  INDEX (`prestation`),
+  INDEX (`chantier`)
+);

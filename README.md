@@ -26,4 +26,7 @@
 
 ### 5. Lancer l'application
   node app.js   ||  npm start 
+
+
+http://localhost:8000/
            

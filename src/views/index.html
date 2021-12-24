@@ -49,7 +49,7 @@
 			<thead>
 				<tr>
 					<th style="width:30px">
-						<a href="#" class="" data-toggle="modal" data-target="#myModal"><i
+						<a onclick="openNewModal()" ><i
 								class="fa fa-plus-circle fa-2x"></i></a>
 					</th>
 					<th>Chantier</th>
@@ -109,7 +109,8 @@
 									</div>
 									<div class="row">
 										<div class="col-xs-12">
-
+											<input id="modalInputType" value="add" type="hidden">
+											<input id="modalUpdateId" value="" type="hidden">
 											<hr style="margin:15px 0">
 											<div class="form-group" id="form-heures-classiques">
 												<div class="col-xs-2">
@@ -193,10 +194,11 @@
 		let rows = '';
 		jsonList.forEach((data, i) => {
 			let total = data["janv"] + data["fev"] + data["mars"] + data["avril"] + data["mai"] + data["juin"] + data["juil"] + data["aout"] + data["sept"] + data["oct"] + data["nov"] + data["dec"];
-			rows += '<tr style="font-style:normal">' +
+			rows += '<tr class="modalData" style="font-style:normal"' +
 				'<td></td>' +
-				'<td>' + data["chantier"] + '</td>' +
-				'<td>' + data["prestation"] + '</td>' +
+				'<td></td>' +
+				'<td> <a class="btn" onclick="modalData('+data["id"]+')"> ' + data["chantier"] + '</a></td>' +
+				'<td> <a class="btn" onclick="modalData('+data["id"]+')"> ' + data["prestation"] + '</a></td>' +
 				'<td>' + data["janv"] + '</td>' +
 				'<td>' + data["fev"] + '</td>' +
 				'<td>' + data["mars"] + '</td>' +
@@ -263,7 +265,7 @@
 			success: function (data) {
 				$('#dataTable').html(buildRows(data) + buildLastRow(data));
 			}
-		});
+		});	
 	});
 
 	$(function () {
@@ -283,9 +285,16 @@
 				oct: $('#heure_mois_10').val(),
 				nov: $('#heure_mois_11').val(),
 				dec: $('#heure_mois_12').val(),
+				id : $('#modalUpdateId').val()
 			};
+			let url;
+			if($('#modalInputType').val() == "add"){
+				url = '/addData';
+			}else{
+				url = '/updateData';
+			}
 			$.ajax({
-				url: '/addData',
+				url: url,
 				type: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify(sendData),
@@ -308,6 +317,50 @@
 			}
 		});
 	}
+	function openNewModal() {
+		$('#myModal').modal('toggle');
+		$('#heure_mois_1').val( 0 );
+		$('#heure_mois_2').val( 0 );
+		$('#heure_mois_3').val( 0 );
+		$('#heure_mois_4').val( 0 );
+		$('#heure_mois_5').val( 0 );
+		$('#heure_mois_6').val( 0 );
+		$('#heure_mois_7').val( 0 );
+		$('#heure_mois_8').val( 0 );
+		$('#heure_mois_9').val( 0 );
+		$('#heure_mois_10').val( 0 );
+		$('#heure_mois_11').val( 0 );
+		$('#heure_mois_12').val( 0 );
+		$('#modalInputType').val("add");
+	}
+	
+	function modalData(id) {
+		$('#myModal').modal('toggle');
+		$.ajax({
+			url: '/modalData',
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({ id: id }),
+			success: function (data) {
+				$('#prestation_type').val( data["prestation"] );
+				$('#chantier_type').val( data["chantier"]);
+				$('#heure_mois_1').val( data["janv"] );
+				$('#heure_mois_2').val( data["fev"] );
+				$('#heure_mois_3').val( data["mars"] );
+				$('#heure_mois_4').val( data["avril"] );
+				$('#heure_mois_5').val( data["mai"] );
+				$('#heure_mois_6').val( data["juin"] );
+				$('#heure_mois_7').val( data["juil"] );
+				$('#heure_mois_8').val( data["aout"] );
+				$('#heure_mois_9').val( data["sept"] );
+				$('#heure_mois_10').val( data["oct"]);
+				$('#heure_mois_11').val( data["nov"] );
+				$('#heure_mois_12').val( data["dec"] );
+				$('#modalInputType').val("update");
+				$('#modalUpdateId').val(id);
+			}
+		});
+	}
 
 	$(".filter").change(function () {
 		let valueChantier = $('#filtreChantier').val();
@@ -325,5 +378,14 @@
 
 
 </script>
+<style>
+	a {
+
+	color: black;
+	padding: 1em 1.5em;
+	text-decoration: none;
+	text-transform: uppercase;
+	}
+</style>
 
 </html>
